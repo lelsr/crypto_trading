@@ -179,6 +179,57 @@ def test_insert_manual_review(tmp_path: Path) -> None:
     assert json.loads(row[1]) == ["support", "continuation"]
 
 
+def test_recent_signal_quality_rows_include_signal_tracking_and_review_fields(tmp_path: Path) -> None:
+    repo = SQLiteRepository(tmp_path / "signals.db")
+    scan_id = repo.create_scan_run(scan_id="scan-quality", started_at=aware_now())
+    signal = LongSignal(
+        symbol="SOLUSDT",
+        primary_exchange="bybit",
+        score=88.0,
+        entry_zone_low=100.0,
+        entry_zone_high=101.0,
+        stop_loss=96.0,
+        stop_reason="4h support minus 0.3% buffer",
+        timeframe_alignment={"15m": "ok", "1h": "ok", "4h": "ok"},
+        reasons=["signal_level:A", "rr:3.1"],
+        invalidation="close below support",
+        created_at=aware_now(),
+    )
+    repo.insert_signal(scan_id=scan_id, signal=signal, signal_id="sig-quality")
+    repo.insert_signal_tracking(
+        signal_id="sig-quality",
+        status="stopped",
+        updated_at=aware_now(),
+        max_favorable_excursion=0.5,
+        max_adverse_excursion=-4.0,
+        stop_touched=True,
+        target_touched=False,
+        duration_minutes=90,
+    )
+    repo.insert_manual_review(
+        ManualReview(
+            review_id="review-quality",
+            signal_id="sig-quality",
+            manual_verdict="bad",
+            manual_notes="late entry",
+            manual_tags=["late_entry"],
+            reviewed_at=aware_now(),
+        )
+    )
+
+    rows = repo.get_recent_signal_quality_rows(limit=10)
+
+    assert len(rows) == 1
+    assert rows[0]["signal_id"] == "sig-quality"
+    assert rows[0]["score"] == 88.0
+    assert rows[0]["stop_reason"] == "4h support minus 0.3% buffer"
+    assert rows[0]["reasons"] == ["signal_level:A", "rr:3.1"]
+    assert rows[0]["tracking_status"] == "stopped"
+    assert rows[0]["stop_touched"] is True
+    assert rows[0]["manual_verdict"] == "bad"
+    assert rows[0]["manual_tags"] == ["late_entry"]
+
+
 def test_to_json_rejects_unsafe_unserializable_payload() -> None:
     class NotSerializable:
         pass

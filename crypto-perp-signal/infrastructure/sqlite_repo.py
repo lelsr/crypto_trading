@@ -541,6 +541,60 @@ class SQLiteRepository:
             ).fetchall()
         return [self._feedback_row_to_dict(row) for row in rows]
 
+    def get_recent_signal_quality_rows(self, *, limit: int = 200) -> list[dict[str, Any]]:
+        with connect(self.db_path) as conn:
+            rows = conn.execute(
+                """
+                WITH latest_tracking AS (
+                    SELECT st.*
+                    FROM signal_tracking st
+                    JOIN (
+                        SELECT signal_id, MAX(id) AS max_id
+                        FROM signal_tracking
+                        GROUP BY signal_id
+                    ) latest ON latest.signal_id = st.signal_id AND latest.max_id = st.id
+                ),
+                latest_reviews AS (
+                    SELECT mr.*
+                    FROM manual_reviews mr
+                    JOIN (
+                        SELECT signal_id, MAX(reviewed_at) AS max_reviewed_at
+                        FROM manual_reviews
+                        GROUP BY signal_id
+                    ) latest ON latest.signal_id = mr.signal_id AND latest.max_reviewed_at = mr.reviewed_at
+                )
+                SELECT
+                    s.signal_id,
+                    s.symbol,
+                    s.primary_exchange,
+                    s.score,
+                    s.entry_zone_low,
+                    s.entry_zone_high,
+                    s.stop_loss,
+                    s.stop_reason,
+                    s.reasons_json,
+                    s.status AS signal_status,
+                    s.created_at,
+                    lt.status AS tracking_status,
+                    lt.max_favorable_excursion,
+                    lt.max_adverse_excursion,
+                    lt.stop_touched,
+                    lt.target_touched,
+                    lt.duration_minutes,
+                    lr.manual_verdict,
+                    lr.manual_notes,
+                    lr.manual_tags_json,
+                    lr.reviewed_at
+                FROM signals s
+                LEFT JOIN latest_tracking lt ON lt.signal_id = s.signal_id
+                LEFT JOIN latest_reviews lr ON lr.signal_id = s.signal_id
+                ORDER BY s.created_at DESC
+                LIMIT ?
+                """,
+                (limit,),
+            ).fetchall()
+        return [self._quality_row_to_dict(row) for row in rows]
+
     def get_recent_signals(self, *, limit: int = 20) -> list[dict[str, Any]]:
         with connect(self.db_path) as conn:
             rows = conn.execute(
@@ -586,6 +640,17 @@ class SQLiteRepository:
             data["stop_touched"] = bool(data["stop_touched"])
         if "target_touched" in data and data["target_touched"] is not None:
             data["target_touched"] = bool(data["target_touched"])
+        data["manual_tags"] = from_json(data.pop("manual_tags_json"), [])
+        return data
+
+    @staticmethod
+    def _quality_row_to_dict(row: sqlite3.Row) -> dict[str, Any]:
+        data = dict(row)
+        if "stop_touched" in data and data["stop_touched"] is not None:
+            data["stop_touched"] = bool(data["stop_touched"])
+        if "target_touched" in data and data["target_touched"] is not None:
+            data["target_touched"] = bool(data["target_touched"])
+        data["reasons"] = from_json(data.pop("reasons_json"), [])
         data["manual_tags"] = from_json(data.pop("manual_tags_json"), [])
         return data
 
