@@ -4,7 +4,7 @@
 
 ## 当前状态
 
-Phase 0 - Phase 12 已完成，当前进入 V1 acceptance 与首次提交准备。
+Phase 0 - Phase 14 已完成，pending push to origin/main。
 
 当前全量测试：
 
@@ -12,7 +12,7 @@ Phase 0 - Phase 12 已完成，当前进入 V1 acceptance 与首次提交准备�
 pytest
 ```
 
-最近结果：`106 passed`。
+最近结果：`122 passed`。
 
 ## 当前完成能力
 
@@ -34,6 +34,12 @@ pytest
 - Feishu webhook notifier：A/B 推送，C 仅看板展示。
 - 本地 Streamlit dashboard。
 - Scan orchestrator、手动运行、循环调度、markdown report。
+- Signal quality analyzer：质量评分、胜率分析、衰减分析。
+- Parameter optimizer：基于历史复盘数据的策略参数优化建议。
+- Quality report service：信号质量分析 markdown 报告。
+- 多策略体系：trend v2 / breakout v1 / mean reversion v1。
+- Strategy selector：根据市场状态选择适用策略。
+- Strategy comparator：横向对比策略表现（胜率、平均 RR、最大回撤）。
 
 ## 架构约束
 

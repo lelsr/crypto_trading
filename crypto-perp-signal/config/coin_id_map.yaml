@@ -1,0 +1,33 @@
+# Symbol-to-CoinGecko ID mapping for market cap enrichment.
+# Only common major coins; unmapped symbols get unknown market cap (kept with penalty).
+btcusdt: bitcoin
+ethusdt: ethereum
+solusdt: solana
+bnbusdt: binancecoin
+xrpusdt: ripple
+dogeusdt: dogecoin
+adausdt: cardano
+avaxusdt: avalanche-2
+linkusdt: chainlink
+tonusdt: the-open-network
+trxusdt: tron
+dotusdt: polkadot
+ltcusdt: litecoin
+bchusdt: bitcoin-cash
+nearusdt: near
+uniusdt: uniswap
+aptusdt: aptos
+arbusdt: arbitrum
+opusdt: optimism
+suiusdt: sui
+maticusdt: polygon-ecosystem-token
+atomusdt: cosmos
+injusdt: injective-protocol
+seiusdt: sei
+tiadusdt: celestia
+ftmusdt: fantom
+aaveusdt: aave
+crvusdt: curve-dao-token
+ldousdt: lido-dao
+enausdt: ethena
+pendleusdt: pendle

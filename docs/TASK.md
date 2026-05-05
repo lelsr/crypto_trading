@@ -4,15 +4,12 @@
 
 ## 当前任务
 
-当前任务 = V1 acceptance。
+当前任务 = 文档同步与 push 准备。
 
-本轮只执行验收、文档同步和首次提交准备：
-- 更新 `PLANS.md`，将 Phase 0 - Phase 12 标记为 completed。
-- 更新 `docs/TASK.md`，标记当前任务为 V1 acceptance。
-- 更新 `crypto-perp-signal/README.md`，补齐本地运行、飞书配置和 V1 禁止事项。
-- 运行全量 `pytest`。
-- 运行 `git status`。
-- 输出建议首次 commit message。
+本轮只执行文档同步：
+- 更新 `PLANS.md`，将 Phase 13、Phase 14 标记为 completed。
+- 更新 `docs/TASK.md`，反映 Phase 14 完成状态。
+- 更新 `crypto-perp-signal/README.md`，更新测试数量和新能力描述。
 
 ## 当前状态
 
@@ -29,7 +26,10 @@
 - Phase 10：Feishu notifier / local Streamlit dashboard，completed。
 - Phase 11：scan orchestrator / scheduler / reports / CLI entrypoints，completed。
 - Phase 12：V1 acceptance 与首次提交准备，completed。
-- 最近验证结果：`pytest` 106 passed。
+- Phase 13：signal quality analyzer / parameter optimizer / quality report，completed。
+- Phase 14：multi-strategy system / trend v2 / breakout v1 / mean reversion v1 / selector / comparator，completed。
+- 最近验证结果：`pytest` 122 passed。
+- main 当前领先 origin/main 1 个 commit，pending push。
 
 ## 本轮不做
 
@@ -54,4 +54,4 @@
 
 ## 下一步等待确认
 
-本轮完成后停止，等待用户确认是否执行首次 git commit。
+本轮完成后停止，等待用户确认是否推送到 origin/main。

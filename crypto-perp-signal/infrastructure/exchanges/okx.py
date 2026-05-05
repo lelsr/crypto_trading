@@ -50,10 +50,11 @@ class OKXAdapter(ExchangeAdapter):
 
     def fetch_klines(self, symbol: str, timeframe: str, limit: int) -> list[KlineBar]:
         inst_id = self._to_okx_inst_id(symbol)
+        okx_bar = timeframe.replace("h", "H").replace("m", "m")  # OKX requires uppercase H
         result = self.http_client.get_json(
             f"{self.base_url}/api/v5/market/candles",
-            params={"instId": inst_id, "bar": timeframe, "limit": limit},
-            cache_key=f"{self.exchange}:candles:{inst_id}:{timeframe}:{limit}",
+            params={"instId": inst_id, "bar": okx_bar, "limit": limit},
+            cache_key=f"{self.exchange}:candles:{inst_id}:{okx_bar}:{limit}",
         )
         self._record_health(result)
         data = result.data.get("data") if isinstance(result.data, dict) else None

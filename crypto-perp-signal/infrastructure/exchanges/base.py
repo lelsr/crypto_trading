@@ -37,6 +37,9 @@ class ExchangeAdapter(ABC):
     def fetch_usdt_perp_tickers(self) -> list[ExchangeTicker]:
         raise NotImplementedError
 
+    def fetch_tickers(self) -> list[ExchangeTicker]:
+        return self.fetch_usdt_perp_tickers()
+
     @abstractmethod
     def fetch_klines(self, symbol: str, timeframe: str, limit: int) -> list[KlineBar]:
         raise NotImplementedError

@@ -8,10 +8,10 @@
 - v0.3 详细计划：已创建 `docs/plan_v0.3.md`。
 - 架构确认：已创建并通过 `docs/architecture_review.md`。
 - 当前任务说明：已创建 `docs/TASK.md`。
-- Phase 0 - Phase 12：已完成并通过测试，最近验证结果为 `pytest` 106 passed。
-- 当前阶段：V1 acceptance 与首次提交准备。
-- 当前任务：验收、文档同步、测试确认、提交信息准备；不新增业务功能。
-- 停止点：完成 V1 acceptance 检查后停止，等待确认首次提交。
+- Phase 0 - Phase 14：已完成并通过测试，最近验证结果为 `pytest` 122 passed。
+- 当前阶段：Phase 14 completed，pending push to origin/main。
+- 当前任务：文档同步，等待确认推送到 origin/main。
+- 停止点：完成文档同步后停止，等待确认 push。
 
 ## 核心约束
 
@@ -232,6 +232,40 @@
 - 不写实盘下单。
 - 不改变架构边界。
 - README 覆盖本地安装、初始化数据库、单轮扫描、循环扫描、启动看板、飞书配置和 V1 禁止事项。
+
+## Phase 13: 信号质量分析与参数优化
+
+状态：completed
+
+交付物：
+- `lifecycle/signal_quality_analyzer.py`：信号质量评分、胜率分析、信号衰减分析。
+- `lifecycle/parameter_optimizer.py`：策略参数优化建议，基于历史复盘数据。
+- `application/quality_report_service.py`：生成信号质量分析报告。
+- 对应测试：`test_signal_quality_analyzer.py`、`test_parameter_optimizer.py`、`test_quality_report_service.py`。
+
+验收点：
+- 质量分析覆盖 scoring 分布、signal level 分布、RR 分布、止损距离分布。
+- 参数优化建议可追溯、可解释。
+- 报告为 markdown 格式，可读。
+- 不自动修改策略参数，只记录建议。
+
+## Phase 14: 多策略体系
+
+状态：completed
+
+交付物：
+- `domain/strategies/long_signal_trend_v2.py`：趋势策略 v2，改进版做多入场逻辑。
+- `domain/strategies/long_signal_breakout_v1.py`：突破策略，识别关键位突破入场。
+- `domain/strategies/long_signal_mean_reversion_v1.py`：均值回归策略，识别超卖反弹机会。
+- `lifecycle/strategy_selector.py`：策略选择器，根据市场状态选择适用策略。
+- `lifecycle/strategy_comparator.py`：策略对比器，回测不同策略表现并排名。
+- 对应测试：`test_strategy_selector.py`、`test_strategy_comparator.py`。
+
+验收点：
+- 三大策略独立可测试，输入输出接口统一。
+- Selector 基于市场状态（波动率、趋势强度、成交量）选择策略。
+- Comparator 可横向对比策略表现（胜率、平均 RR、最大回撤）。
+- 新策略不破坏原有 `long_signal_v1` 和信号生命周期流程。
 
 ## 未来只预留、不实现
 
