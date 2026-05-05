@@ -1,0 +1,65 @@
+runtime:
+  loop_minutes: 38
+  local_mode: true
+  single_scan_timeout_seconds: 180
+
+universe:
+  quote_asset: USDT
+  contract_type: perpetual
+  preselect_top_n_per_exchange: 300
+  final_top_m_after_market_cap: 80
+
+market_cap_filter:
+  enabled: true
+  min_market_cap: 50000000
+  max_market_cap: 5000000000
+  keep_unknown_market_cap: true
+
+signals:
+  push_threshold: 0
+  min_score_to_display: 0
+  enable_long_signal_v1: true
+
+klines:
+  timeframes:
+    - 15m
+    - 1h
+    - 4h
+  limit: 200
+  fetch_policy:
+    only_after_final_top_m: true
+    primary_exchange_only: true
+    allow_cross_exchange_merge: false
+
+risk:
+  enable_leverage: false
+  stop_loss_mode: technical_only
+  enable_live_ordering: false
+
+feishu:
+  enabled: true
+  dashboard_local_url: http://localhost:8501
+
+stability:
+  request_timeout_seconds: 10
+  retry_attempts: 3
+  retry_backoff_seconds: 1.5
+  enable_rate_limit: true
+  enable_fallback_cache: true
+  allow_partial_success: true
+  structured_logging: true
+
+performance_budget:
+  target_scan_seconds: 180
+  exchange_local_top_n: 300
+  final_technical_top_m: 80
+  kline_timeframes:
+    - 15m
+    - 1h
+    - 4h
+  kline_limit_per_timeframe: 200
+
+storage:
+  sqlite_path: data/signals.db
+  cache_dir: data/cache
+  report_dir: data/reports

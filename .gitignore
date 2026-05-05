@@ -1,0 +1,40 @@
+# macOS
+.DS_Store
+
+# Python
+__pycache__/
+*.py[cod]
+*.pyo
+*.pyd
+.pytest_cache/
+.mypy_cache/
+.ruff_cache/
+.coverage
+htmlcov/
+
+# Virtual environments
+.venv/
+venv/
+env/
+
+# Local env and secrets
+.env
+.env.local
+.env.*.local
+!.env.example
+
+# Local runtime data
+crypto-perp-signal/data/*.db
+crypto-perp-signal/data/*.sqlite
+crypto-perp-signal/data/*.sqlite3
+crypto-perp-signal/data/cache/
+crypto-perp-signal/data/reports/
+
+# Logs
+*.log
+logs/
+
+# Build artifacts
+dist/
+build/
+*.egg-info/

@@ -1,0 +1,53 @@
+profiles:
+  long_signal_v1:
+    enabled: true
+    direction: long_only
+    leverage_enabled: false
+    live_ordering_enabled: false
+    timeframes:
+      entry: 15m
+      intraday_trend: 1h
+      higher_context: 4h
+    indicators:
+      ema:
+        periods:
+          - 20
+          - 60
+      macd:
+        fast_period: 12
+        slow_period: 26
+        signal_period: 9
+      bollinger_bands:
+        period: 20
+        stddev: 2
+      volume_ma:
+        period: 20
+    stop_loss:
+      mode: technical_only
+      priority:
+        - 4h_support_below
+        - 1h_recent_swing_low_below
+        - 15m_bollinger_lower_below
+        - 15m_or_1h_ema60_below
+    constraints:
+      forbid_cross_exchange_kline_merge: true
+      require_primary_exchange_klines: true
+      forbid_full_market_kline_prefetch: true
+      no_live_orders: true
+
+  future_placeholders:
+    order_adapter:
+      enabled: false
+      description: Reserved for future live order integration. V1 must not place live orders.
+    paper_trading:
+      enabled: false
+      description: Reserved for future simulated trading.
+    timesfm_predictor:
+      enabled: false
+      description: Reserved for future time-series prediction.
+    agent_research:
+      enabled: false
+      description: Reserved for future research and explanation workflows.
+    portfolio_risk:
+      enabled: false
+      description: Reserved for future portfolio-level risk controls.
